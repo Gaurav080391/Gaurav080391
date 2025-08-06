@@ -95,3 +95,72 @@ if __name__ == "__main__":
     main()
 
 
+
+####################################
+
+
+import requests
+import json
+import credstash
+import os
+
+REGION = os.environ.get('AWS_REGION')
+
+def credstash_retrieve(tooling_environment):
+    table = 'credential-store'
+    if tooling_environment == "prod":
+        tooling_environment = tooling_environment.replace('o', '')
+    if tooling_environment == "pre-prod":
+        tooling_environment = tooling_environment.replace('o', '').replace('-', '')
+
+    credstash_secret_url = f'azsvc-hsbc-wpb-jenkins-jg-{tooling_environment}1-dtme-01.secret'
+    credstash_app_id_url = f'azsvc-hsbc-wpb-jenkins-jg-{tooling_environment}1-dtme-01.app_id'
+
+    app_id = credstash.getSecret(credstash_app_id_url, region=REGION, table=table)
+    client_secret = credstash.getSecret(credstash_secret_url, region=REGION, table=table)
+    return app_id, client_secret
+
+def get_access_token(app_id, client_secret):
+    token_url = 'https://login.microsoftonline.com/e0fd434d-ba64-497b-90d2-859c472e1a92/oauth2/token'
+    token_data = {
+        'grant_type': 'client_credentials',
+        'client_id': app_id,
+        'client_secret': client_secret,
+        'resource': 'https://graph.microsoft.com',
+        'scope': 'https://graph.microsoft.com'
+    }
+    response = requests.post(token_url, data=token_data)
+    response.raise_for_status()
+    return response.json().get('access_token')
+
+def get_group_details(token, group_name):
+    url = f"https://graph.microsoft.com/v1.0/groups?$filter=displayName eq '{group_name}'"
+    headers = {'Authorization': f'Bearer {token}'}
+    r = requests.get(url, headers=headers)
+    if r.status_code != 200:
+        print(f"❌ Failed to fetch group {group_name}: {r.text}")
+        return None
+    data = r.json().get('value', [])
+    if data:
+        return {"name": data[0]['displayName'], "id": data[0]['id']}
+    return None
+
+def lambda_handler(event, context):
+    environment = event['tooling_environment']
+
+    ad_groups = [
+        "Infodir-jenkins-dpop-admins",
+        "Infodir-jenkins-dpop-users",
+        "Infodir-jenkins-dpop-read_only",
+        "Infodir-jenkins-myteam-users"
+    ]
+
+    app_id, client_secret = credstash_retrieve(environment)
+    token = get_access_token(app_id, client_secret)
+
+    for group_name in ad_groups:
+        details = get_group_details(token, group_name)
+        if details:
+            print(f"Group Name: {details['name']}, Object ID: {details['id']}")
+
+
