@@ -248,5 +248,75 @@ curl -s http://169.254.169.254/latest/meta-data/iam/info | jq
 
 
 
+###################################
+# VPC Endpoints
+###################################
+resource "aws_vpc_endpoint" "vpc_endpoints" {
+  provider = aws.secondary
+
+  for_each = {
+    for service in local.vpc_endpoint_services :
+    service.service_name => service
+  }
+
+  vpc_id            = var.eu_west_1_vpc_id
+  vpc_endpoint_type = "Interface"
+  service_name      = each.value.service_name
+
+  # Use provided subnets if given, else fallback to default subnets
+  subnet_ids = try(
+    each.value.subnets,
+    module.network.subnets["eu-west-1"].private_subnets[*].id
+  )
+
+  # Default SG with additional ones if passed
+  security_group_ids = concat(
+    [aws_security_group.sg[0].id],
+    try(each.value.security_groups, [])
+  )
+
+  private_dns_enabled = false
+
+  tags = merge(
+    {
+      Name        = "${each.value.service_name}-endpoint"
+      Environment = var.environment
+    },
+    var.tags
+  )
+}
+
+###################################
+# Hosted Zone (fixed)
+###################################
+# Since you always use ONE hosted zone, no need for data lookup.
+# Just hardcode or make a variable for zone_id.
+variable "hosted_zone_id" {
+  description = "Fixed hosted zone ID for VPC endpoint DNS records"
+  type        = string
+  default     = "Z020880123ZGZ59VO"  # <-- replace with your actual hosted zone ID
+}
+
+###################################
+# Route53 Record (Conditional)
+###################################
+resource "aws_route53_record" "endpoint_dns" {
+  for_each = {
+    for svc in local.vpc_endpoint_services : svc.service_name => svc
+    if try(svc.dns_name, null) != null
+  }
+
+  zone_id = var.hosted_zone_id
+  name    = each.value.dns_name
+  type    = "A"
+
+  alias {
+    name                   = aws_vpc_endpoint.vpc_endpoints[each.key].dns_entries[0].dns_name
+    zone_id                = aws_vpc_endpoint.vpc_endpoints[each.key].dns_entries[0].hosted_zone_id
+    evaluate_target_health = true
+  }
+}
+
+
 
 
