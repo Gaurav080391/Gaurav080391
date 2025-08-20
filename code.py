@@ -319,4 +319,31 @@ resource "aws_route53_record" "endpoint_dns" {
 
 
 
+#########
+
+
+resource "aws_vpc_endpoint" "vpc_endpoints" {
+  for_each          = var.vpc_endpoints
+  vpc_id            = module.centre-vpc[0].vpc_id
+  service_name      = "com.amazonaws.${var.region}.${each.value.service_name}"
+  vpc_endpoint_type = each.value.type
+  subnet_ids        = each.value.subnets
+  security_group_ids = each.value.security_groups != null ? each.value.security_groups : []
+}
+
+# Create Route53 record if dns_name is defined
+resource "aws_route53_record" "vpc_endpoint_dns" {
+  for_each = {
+    for k, v in var.vpc_endpoints : k => v
+    if try(v.dns_name, null) != null
+  }
+
+  zone_id = each.value.zone_id                 # pass zone_id in input variable
+  name    = each.value.dns_name                # the custom DNS name you want
+  type    = "CNAME"
+  ttl     = 300
+  records = [aws_vpc_endpoint.vpc_endpoints[each.key].dns_entry[0].dns_name]
+}
+
+
 
