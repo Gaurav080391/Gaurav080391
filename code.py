@@ -346,4 +346,39 @@ resource "aws_route53_record" "vpc_endpoint_dns" {
 }
 
 
+#####
+
+
+resource "aws_vpc_endpoint" "vpc_endpoints" {
+  for_each = {
+    for region, envs in var.vpc_endpoints :
+    region => envs
+  }
+
+  vpc_id            = module.centre-vpc[0].vpc_id
+  service_name      = each.value.service_name
+  vpc_endpoint_type = "Interface"
+  subnet_ids        = each.value.subnets
+  security_group_ids = try(each.value.security_groups, [])
+}
+
+# Create Route53 record if dns_name is defined
+resource "aws_route53_record" "vpc_endpoint_dns" {
+  for_each = {
+    for region, envs in var.vpc_endpoints :
+    region => envs
+    if try(envs[0].dns_name, null) != null
+  }
+
+  zone_id = "Z028038Z8326TZ59JY0"                   # Hosted zone id from input
+  name    = each.value[0].dns_name                  # From input file
+  type    = "A"
+
+  alias {
+    name                   = aws_vpc_endpoint.vpc_endpoints[each.key].dns_entry[0].dns_name
+    zone_id                = aws_vpc_endpoint.vpc_endpoints[each.key].dns_entry[0].hosted_zone_id
+    evaluate_target_health = true
+  }
+}
+
 
