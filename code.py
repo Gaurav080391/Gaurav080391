@@ -382,3 +382,28 @@ resource "aws_route53_record" "vpc_endpoint_dns" {
 }
 
 
+#######
+
+
+# Create DNS record for VPC Endpoint only if dns_name is provided
+resource "aws_route53_record" "vpce_dns" {
+  for_each = {
+    for k, v in var.vpc_endpoints[var.region] : k => v
+    if contains(keys(v), "dns_name") && v.dns_name != null && v.dns_name != ""
+  }
+
+  zone_id = data.aws_route53_zone.selected.zone_id
+  name    = each.value.dns_name
+  type    = "CNAME"
+  ttl     = 300
+
+  # Point to the VPC endpoint's DNS entry
+  records = [aws_vpc_endpoint.this[each.key].dns_entry[0].dns_name]
+}
+
+# Get hosted zone (replace with your zone name or param)
+data "aws_route53_zone" "selected" {
+  name         = var.hosted_zone_name
+  private_zone = false
+}
+
