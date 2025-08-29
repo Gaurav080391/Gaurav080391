@@ -64,3 +64,14 @@ Received recognition for this work by winning the Points of the Quarter award, h
 Prepared and presented Venafi certificate automation for wider adoption and audit requirements, improving compliance and reducing manual intervention.
 
 Planned to showcase the VPC Endpoint automation to the wider automation community, promoting cost-saving initiatives and reusable solutions across teams.
+
+#####
+Question – What personal impact have I made this year? What am I proudest of?
+
+Answer:
+
+Designed and implemented certificate automation that integrates with Venafi to automatically detect expiring certificates and trigger renewal. The solution also provisions certificates seamlessly whenever a new EC2 instance or Jenkins master is created, ensuring zero downtime. Overcoming the challenges of working with Venafi APIs was a significant learning experience, and completing this automation has been one of my key achievements this year.
+
+Learned Docker, EKS, and foundational AI concepts, which have improved my technical efficiency and prepared me to take on more complex projects in the future.
+
+Proudest moment: delivering automation that reduced manual effort, prevented potential outages, and contributed to cost savings and reliability improvements.
