@@ -50,3 +50,17 @@ Handled CR tasks during OSJ migration and post-migration, ensuring business cont
 Completed all ESSD-related tasks assigned to me, meeting deadlines and reducing pending backlog.
 
 Streamlined migration activities by helping the team identify and remove redundant processes, leading to improved efficiency and smoother execution.
+
+
+####
+
+
+Developed a Lambda function for SMTP notifications that integrates with the SMTP Exchange server, enabling any team to easily send automated notifications to Teams and email IDs.
+
+Set up additional notification alerts that are now being used by other teams in India, improving visibility and collaboration.
+
+Received recognition for this work by winning the Points of the Quarter award, highlighting its wider impact.
+
+Prepared and presented Venafi certificate automation for wider adoption and audit requirements, improving compliance and reducing manual intervention.
+
+Planned to showcase the VPC Endpoint automation to the wider automation community, promoting cost-saving initiatives and reusable solutions across teams.
