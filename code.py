@@ -428,3 +428,45 @@ resource "aws_route53_record" "custom_service_dns" {
     evaluate_target_health = true
   }
 }
+
+
+####
+
+
+variable "route53_zone_id" {
+  description = "Global hosted zone ID for VPC endpoint DNS records"
+  type        = string
+}
+
+locals {
+  vpc_endpoints = try(var["vpc_endpoints_${var.region}"], [])
+}
+
+# Lookup endpoint service (needed to get alias target + hosted zone)
+data "aws_vpc_endpoint_service" "custom" {
+  for_each     = {
+    for svc in local.vpc_endpoints :
+    svc.service_name => svc
+    if try(svc.dns_name, null) != null
+  }
+  service_name = each.key
+}
+
+# Create Route53 records only if dns_name is defined
+resource "aws_route53_record" "custom_service_dns" {
+  for_each = {
+    for svc in local.vpc_endpoints :
+    svc.service_name => svc
+    if try(svc.dns_name, null) != null
+  }
+
+  zone_id = var.route53_zone_id
+  name    = each.value.dns_name
+  type    = "A"
+
+  alias {
+    name                   = data.aws_vpc_endpoint_service.custom[each.key].dns_name_configuration[0].dns_name
+    zone_id                = data.aws_vpc_endpoint_service.custom[each.key].dns_name_configuration[0].hosted_zone_id
+    evaluate_target_health = true
+  }
+}
