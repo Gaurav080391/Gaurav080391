@@ -559,3 +559,43 @@ resource "aws_route53_record" "vpc_endpoint_dns" {
     evaluate_target_health = true
   }
 }
+
+
+####
+
+
+# r-eu-west-1.auto.tfvars
+vpc_endpoints = {
+  eu_west_1 = [
+    {
+      service_name    = "com.amazonaws.vpce.eu-west-1.vpce-svc-8a8738766e24a3b9"
+      security_groups = ["sg-8848443261c9496d8"]
+      group_name      = "dynp"
+      dns_name        = "dynp-service.digital-tools.euw1.uat.aws.cloud.hsbc"
+    },
+    {
+      service_name    = "com.amazonaws.vpce.eu-west-1.vpce-svc-874786ee62a38819"
+      security_groups = ["sg-8707441879914del0", "sg-87818765e16c2877"]
+      group_name      = "ship"
+      dns_name        = "shipping-api.digital-tools.euw1.uat.aws.cloud.hsbc"
+    },
+    {
+      service_name    = "com.amazonaws.vpce.eu-west-1.vpce-svc-8a1bcab81cb2754b9"
+      security_groups = []
+      group_name      = "kong"
+      dns_name        = "admin-dev-ebw1-kong.digital-tools.euw1.uat.aws.cloud.hsbc"
+    }
+  ]
+}
+
+# r-us-east-1.auto.tfvars
+vpc_endpoints = {
+  us_east_1 = [
+    {
+      service_name    = "com.amazonaws.vpce.us-east-1.vpce-svc-1234567890"
+      security_groups = ["sg-1234567890"]
+      group_name      = "api"
+      dns_name        = "us-east-api.digital-tools.euw1.uat.aws.cloud.hsbc"
+    }
+  ]
+}
