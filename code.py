@@ -470,3 +470,92 @@ resource "aws_route53_record" "custom_service_dns" {
     evaluate_target_health = true
   }
 }
+
+
+
+######
+
+
+# Hardcoded hosted zone configuration in main.tf
+locals {
+  hosted_zone_config = {
+    zone_id = "Z026488524KME623P1M2M"
+    name    = "digital-tools.euw1.uat.aws.cloud.hsbc"
+  }
+}
+
+resource "aws_vpc_endpoint" "vpc_endpoints" {
+  provider = aws.secondary
+  for_each = {
+    for service in local.vpc_endpoint_services :
+    "${service.group_name}-${var.region}-${replace(service.service_name, "com.amazonaws.vpce.${var.region}.", "")}" => {
+      group_name      = service.group_name
+      service_name    = service.service_name
+      subnets         = service.subnets
+      security_groups = service.security_groups
+      label           = service.label
+      dns_name        = service.dns_name  # This will contain the full DNS name like "admin-dev-ebw1-kong.digital-tools.euw1.uat.aws.cloud.hsbc"
+    }
+  }
+
+  vpc_endpoint_type = "Interface"
+  vpc_id            = var.region != "eu-west-1" ? module.dtime-vpc[0].vpc_id : var.eu_west_1_vpc_id
+
+  # Merge default security group with additional ones
+  security_group_ids = concat(
+    var.region != "eu-west-1" ? [
+      aws_security_group.vpc-endpoints-sg[0].id
+    ] : [
+      aws_security_group.dynamic_sg["jenkins-node-${each.value.group_name}"].id
+    ],
+    each.value.security_groups != null ? each.value.security_groups : []
+  )
+
+  service_name = each.value.service_name
+
+  # Use provided subnets or fall back to default subnets
+  subnet_ids = var.region != "eu-west-1" ? (
+    length(each.value.subnets) > 0 ? [
+      for i in each.value.subnets : module.dtime-vpc[0].subnet_private_ids[0][i]
+    ] : module.dtime-vpc[0].subnet_private_ids[0]
+  ) : (
+    length(each.value.subnets) > 0 ? [
+      for i in each.value.subnets : var.eu_west_1_private_subnet_ids[i]
+    ] : var.eu_west_1_private_subnet_ids
+  )
+
+  tags = merge(
+    each.value.label != null && each.value.label != "-" ? {
+      Name = each.value.label
+    } : {
+      Name = "${each.value.group_name}-vpc-endpoint"
+    },
+    {
+      environment   = var.tooling_environment
+      controlled_by = "terraform"
+      Used_by_team  = "${each.value.group_name}@1"
+      Jenkins_team_id = each.value.group_name
+      Type          = "Interface"
+    }
+  )
+}
+
+# Create DNS records for endpoints when dns_name is specified
+resource "aws_route53_record" "vpc_endpoint_dns" {
+  for_each = {
+    for key, endpoint in aws_vpc_endpoint.vpc_endpoints : key => endpoint
+    if try(each.value.dns_name, null) != null
+  }
+
+  provider = aws.secondary
+  
+  zone_id = local.hosted_zone_config.zone_id
+  name    = each.value.dns_name  # Use the full DNS name from the configuration
+  type    = "A"
+
+  alias {
+    name                   = each.value.dns_entry[0].dns_name
+    zone_id                = each.value.dns_entry[0].hosted_zone_id
+    evaluate_target_health = true
+  }
+}
