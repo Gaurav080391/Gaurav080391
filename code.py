@@ -407,3 +407,24 @@ data "aws_route53_zone" "selected" {
   private_zone = false
 }
 
+
+######
+
+
+resource "aws_route53_record" "custom_service_dns" {
+  for_each = {
+    for service in local.vpcendpoint_custom_services :
+    service.service_name => service
+    if try(service.dns_name, null) != null
+  }
+
+  zone_id = aws_route53_zone.hosted_zone[each.value.hosted_zone].zone_id
+  name    = each.value.dns_name
+  type    = "A"
+
+  alias {
+    name                   = each.value.route_to_hz
+    zone_id                = each.value.zone_id
+    evaluate_target_health = true
+  }
+}
