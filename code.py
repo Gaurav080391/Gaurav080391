@@ -806,3 +806,78 @@ resource "aws_route53_record" "vpc_endpoint_dns" {
     evaluate_target_health = true
   }
 }
+
+
+##########
+
+
+pipeline {
+    agent any
+    environment {
+        AWS_DEFAULT_REGION = "us-east-1"  // change region
+    }
+    stages {
+        stage('Fetch HAProxy Instances') {
+            steps {
+                script {
+                    INSTANCE_IDS = sh(
+                        script: '''
+                        aws ec2 describe-instances \
+                          --filters "Name=tag:Role,Values=haproxy" "Name=instance-state-name,Values=running" \
+                          --query "Reservations[*].Instances[*].InstanceId" \
+                          --output text
+                        ''',
+                        returnStdout: true
+                    ).trim()
+                    
+                    if (INSTANCE_IDS == "") {
+                        error "No HAProxy instances found!"
+                    } else {
+                        echo "Found HAProxy Instances: ${INSTANCE_IDS}"
+                    }
+                }
+            }
+        }
+        
+        stage('Check HAProxy Config') {
+            steps {
+                script {
+                    COMMAND_ID = sh(
+                        script: '''
+                        aws ssm send-command \
+                          --targets "Key=tag:Role,Values=haproxy" \
+                          --document-name "AWS-RunShellScript" \
+                          --comment "Check HAProxy config" \
+                          --parameters 'commands=["haproxy -c -f /etc/haproxy/haproxy.cfg"]' \
+                          --query "Command.CommandId" --output text
+                        ''',
+                        returnStdout: true
+                    ).trim()
+                    
+                    sleep 10 // wait for command execution
+                    
+                    OUTPUT = sh(
+                        script: "aws ssm list-command-invocations --command-id ${COMMAND_ID} --details --output text",
+                        returnStdout: true
+                    ).trim()
+                    
+                    echo "SSM Output: ${OUTPUT}"
+                    
+                    if (!OUTPUT.contains("Configuration file is valid")) {
+                        echo "HAProxy config check failed!"
+                        // 🔔 Call your notification Lambda here
+                        sh '''
+                        aws lambda invoke \
+                          --function-name sendNotificationLambda \
+                          --payload '{"message":"HAProxy config check failed!"}' \
+                          response.json
+                        '''
+                        error "Stopping pipeline due to HAProxy config error"
+                    } else {
+                        echo "HAProxy config is valid ✅"
+                    }
+                }
+            }
+        }
+    }
+}
