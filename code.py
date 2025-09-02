@@ -881,3 +881,84 @@ pipeline {
         }
     }
 }
+
+
+#######
+
+
+pipeline {
+    agent any
+    environment {
+        AWS_DEFAULT_REGION = "us-east-1"   // change to your AWS region
+        HAPROXY_TAG_KEY    = "Role"
+        HAPROXY_TAG_VALUE  = "haproxy"
+        NOTIFY_LAMBDA      = "sendNotificationLambda"  // your lambda name
+    }
+    stages {
+        stage('Get HAProxy Instance') {
+            steps {
+                script {
+                    INSTANCE_ID = sh(
+                        script: """
+                        aws ec2 describe-instances \
+                          --filters "Name=tag:${HAPROXY_TAG_KEY},Values=${HAPROXY_TAG_VALUE}" "Name=instance-state-name,Values=running" \
+                          --query "Reservations[0].Instances[0].InstanceId" \
+                          --output text
+                        """,
+                        returnStdout: true
+                    ).trim()
+
+                    if (INSTANCE_ID == "" || INSTANCE_ID == "None") {
+                        error "No running HAProxy instance found!"
+                    } else {
+                        echo "Selected HAProxy Instance: ${INSTANCE_ID}"
+                    }
+                }
+            }
+        }
+
+        stage('Check HAProxy Config') {
+            steps {
+                script {
+                    COMMAND_ID = sh(
+                        script: """
+                        aws ssm send-command \
+                          --targets "Key=instanceIds,Values=${INSTANCE_ID}" \
+                          --document-name "AWS-RunShellScript" \
+                          --comment "Check HAProxy config" \
+                          --parameters 'commands=["haproxy -c -f /etc/haproxy/haproxy.cfg"]' \
+                          --query "Command.CommandId" \
+                          --output text
+                        """,
+                        returnStdout: true
+                    ).trim()
+
+                    sleep 10  // wait for command execution
+
+                    OUTPUT = sh(
+                        script: "aws ssm list-command-invocations --command-id ${COMMAND_ID} --details --output text",
+                        returnStdout: true
+                    ).trim()
+
+                    echo "SSM Output: ${OUTPUT}"
+
+                    if (!OUTPUT.contains("Configuration file is valid")) {
+                        echo "HAProxy config check failed on ${INSTANCE_ID}"
+
+                        // 🔔 Send notification via Lambda
+                        sh """
+                        aws lambda invoke \
+                          --function-name ${NOTIFY_LAMBDA} \
+                          --payload '{"sender":"jenkins@company.com","recipient":"team@company.com","message":"HAProxy config check failed on instance ${INSTANCE_ID}"}' \
+                          response.json
+                        """
+
+                        error "Stopping pipeline due to HAProxy config error"
+                    } else {
+                        echo "HAProxy config is valid ✅"
+                    }
+                }
+            }
+        }
+    }
+}
