@@ -74,4 +74,10 @@ Designed and implemented certificate automation that integrates with Venafi to a
 
 Learned Docker, EKS, and foundational AI concepts, which have improved my technical efficiency and prepared me to take on more complex projects in the future.
 
-Proudest moment: delivering automation that reduced manual effort, prevented potential outages, and contributed to cost savings and reliability improvements.
+Proudest moment: delivering automation that reduced manual effort, prevented potential outages, and contributed to cost savings and reliability improvements
+
+Following up on this ticket. As we are now past Q3, resolving this blocker is urgent and a high priority for our team.
+
+Could you please provide a status update on the implementation of the exception process? We specifically need a clear timeline for when this will be unblocked so we can plan our activities.
+
+This needs to be fixed as soon as possible. Thank you.
