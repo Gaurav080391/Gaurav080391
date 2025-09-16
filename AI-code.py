@@ -81,3 +81,11 @@ Following up on this ticket. As we are now past Q3, resolving this blocker is ur
 Could you please provide a status update on the implementation of the exception process? We specifically need a clear timeline for when this will be unblocked so we can plan our activities.
 
 This needs to be fixed as soon as possible. Thank you.
+
+All,
+
+This ticket is following up on the critical blocker preventing EC2 AMI promotions due to the lack of an exception process.
+
+The timeline for a resolution has now extended beyond Q3, making this an urgent priority. Our team is unable to proceed until this is resolved.
+
+@Philip P.R. Rebbeck, @Nick Garratt: Could you please provide a detailed status update and a definitive timeline for the implementation of the SNow exception process or a suitable workaround? Clarity on the path forward is required immediately.
