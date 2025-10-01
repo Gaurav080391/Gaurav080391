@@ -89,3 +89,5 @@ This ticket is following up on the critical blocker preventing EC2 AMI promotion
 The timeline for a resolution has now extended beyond Q3, making this an urgent priority. Our team is unable to proceed until this is resolved.
 
 @Philip P.R. Rebbeck, @Nick Garratt: Could you please provide a detailed status update and a definitive timeline for the implementation of the SNow exception process or a suitable workaround? Clarity on the path forward is required immediately.
+
+Thank you everyone for your kind wishes 🙏. The surgery went well and I’m recovering fine. From today, I’m joining back."
