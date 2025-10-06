@@ -962,3 +962,6 @@ pipeline {
         }
     }
 }
+
+
+We are using the same mailbox for all certificate alerts. I’ll update the email distribution and take care of this.
