@@ -91,3 +91,9 @@ The timeline for a resolution has now extended beyond Q3, making this an urgent 
 @Philip P.R. Rebbeck, @Nick Garratt: Could you please provide a detailed status update and a definitive timeline for the implementation of the SNow exception process or a suitable workaround? Clarity on the path forward is required immediately.
 
 Thank you everyone for your kind wishes 🙏. The surgery went well and I’m recovering fine. From today, I’m joining back."
+
+
+For cost-saving purposes, we will be removing Datadog CI Visibility from the Datadog dashboard.
+This feature is not required for our current work, and removing it will help reduce our overall Datadog cost.
+
+If you have any concerns or need this feature for any specific reason, please let me know.
