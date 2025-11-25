@@ -97,3 +97,71 @@ For cost-saving purposes, we will be removing Datadog CI Visibility from the Dat
 This feature is not required for our current work, and removing it will help reduce our overall Datadog cost.
 
 If you have any concerns or need this feature for any specific reason, please let me know.
+
+Here is a clean and professional summary you can paste directly into your ticket:
+
+
+---
+
+Summary of Jenkins RBAC Permissions (Matrix Authorization Strategy)
+
+We reviewed the RBAC configuration in Jenkins, specifically the Overall → Read and Overall → Administer permissions. The following points clarify how these permissions work:
+
+1. Overall → Read
+
+This permission only allows a user to view Jenkins UI.
+
+The user can log in and see dashboards, jobs, and build history (if job-level read permissions are also granted).
+
+It does not allow any modifications to jobs, configuration, credentials, or system settings.
+
+This is essentially view-only access, not admin access.
+
+
+
+2. Overall → Administer
+
+This is the highest privilege in Jenkins.
+
+Provides full control over Jenkins, including:
+
+Changing configurations
+
+Managing plugins
+
+Editing/deleting jobs
+
+Managing credentials and nodes
+
+
+Jenkins does not support “read-only admin.”
+If a user has Administer, they automatically get full write privileges.
+
+
+
+3. Important Note
+
+If we want users to have read-only access, we must give them only “Overall → Read” and remove the “Administer” permission.
+
+At least one group/user must retain Administer access to avoid locking out Jenkins administrators.
+
+
+
+4. Conclusion
+
+Read-only admin access is not possible in Jenkins.
+
+The correct approach is:
+
+Admin users → Overall → Administer
+
+Read-only users → Overall → Read (plus job-level read permissions as needed)
+
+
+
+
+
+
+---
+
+If you want, I can also format it in bullet points or a shorter version depending on your ticket style.
