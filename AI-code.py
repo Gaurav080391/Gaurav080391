@@ -1,167 +1,96 @@
-###
-This repo is for all AI code
+Short answer:
+Yes, you can move from m5.2xlarge → r5a.large for cost savings, BUT only if your Jenkins workload fits into the much smaller CPU capacity.
 
+Let’s break it down clearly.
 
-Question – How have I contributed to my team’s outcomes and what was the impact?
+✅ 1. What you have now (m5.2xlarge)
 
-Answer:
+8 vCPUs
 
-Implemented certificate automation using Venafi to automatically renew and provision new certificates during re-provisioning, reducing manual effort and minimizing risk of service downtime.
+32 GB RAM
 
-Set up automated email notifications for critical processes (proxy refresh, instance restarts, ASG changes), improving visibility and helping the team act faster on system changes.
+This is a high-capacity instance, good for:
+✔ multiple Jenkins executors
+✔ heavy pipeline tasks
+✔ parallel builds
+✔ plugins that use lots of CPU
 
-Developed a Lambda function for SMTP notifications, enabling integration with the SMTP exchange server. This feature is now reusable by the team for sending alerts to Teams and email, ensuring faster communication.
+🔄 What you want to move to (r5a.large)
 
-Contributed to Jase migration, completing all assigned tasks on time and ensuring a smooth and successful migration without delays.
+2 vCPUs
 
-Supported the team during open-source migration, ensuring tasks were delivered on schedule and with minimal disruption.
+16 GB RAM
 
-Delivered all Spring-related tasks assigned to me, supporting ongoing team deliverables and project timelines.
+This is 75% less CPU and 50% less RAM.
 
-Handled CR tasks during OSJ migration and post-migration, ensuring business continuity and stability of migrated systems.
+⚠️ Will Jenkins work on r5a.large?
 
-Completed all ESSD-related tasks assigned to me, meeting deadlines and reducing pending backlog.
+It depends on your Jenkins usage:
 
-Streamlined migration activities by helping the team identify and remove redundant processes, leading to improved efficiency and smoother execution.
+✔️ You can move if:
 
-########
+You run 1–2 executors only
 
+No heavy jobs (no large Docker builds, no huge Terraform plans, no Maven/Gradle builds)
 
-Question – How have I contributed to my team’s outcomes and what was the impact?
+Limited number of concurrent builds
 
-Answer:
+CPU usage on m5.2xlarge is usually below 20–25%
 
-Implemented certificate automation using Venafi to automatically renew and provision new certificates during re-provisioning, reducing manual effort and minimizing risk of service downtime.
+RAM usage stays under 10–12 GB
 
-Set up automated email notifications for critical processes (proxy refresh, instance restarts, ASG changes), improving visibility and helping the team act faster on system changes.
+❌ You should NOT move if:
 
-Developed a Lambda function for SMTP notifications, enabling integration with the SMTP exchange server. This feature is now reusable by the team for sending alerts to Teams and email, ensuring faster communication.
+Jenkins becomes slow during builds
 
-Built VPC Endpoint automation that identifies unused endpoints from CloudWatch logs and updates Terraform files automatically, helping the team optimize infrastructure and achieve cost savings.
+Multiple builds run in parallel
 
-Contributed to Jase migration, completing all assigned tasks on time and ensuring a smooth and successful migration without delays.
+You use heavy plugins
 
-Supported the team during open-source migration, ensuring tasks were delivered on schedule and with minimal disruption.
+You use Jenkins for Docker builds / Java builds / performance tests
 
-Delivered all Spring-related tasks assigned to me, supporting ongoing team deliverables and project timelines.
+Your pipelines use a lot of CPU (Terraform, Python, Java, Node etc.)
 
-Handled CR tasks during OSJ migration and post-migration, ensuring business continuity and stability of migrated systems.
+🧪 Best way to decide (simple and safe)
 
-Completed all ESSD-related tasks assigned to me, meeting deadlines and reducing pending backlog.
+Check CPU & RAM usage on your current m5.2xlarge:
 
-Streamlined migration activities by helping the team identify and remove redundant processes, leading to improved efficiency and smoother execution.
+If typical usage is:
 
+CPU < 1 core (12.5%)
 
-####
+RAM < 10–12 GB
 
+👉 You can safely downgrade to r5a.large
 
-Developed a Lambda function for SMTP notifications that integrates with the SMTP Exchange server, enabling any team to easily send automated notifications to Teams and email IDs.
+If usage is higher:
 
-Set up additional notification alerts that are now being used by other teams in India, improving visibility and collaboration.
+👉 Better option: r5a.xlarge (4 vCPUs, 32 GB RAM)
+This gives:
 
-Received recognition for this work by winning the Points of the Quarter award, highlighting its wider impact.
+Half CPU compared to m5.2xlarge
 
-Prepared and presented Venafi certificate automation for wider adoption and audit requirements, improving compliance and reducing manual intervention.
+Same RAM
 
-Planned to showcase the VPC Endpoint automation to the wider automation community, promoting cost-saving initiatives and reusable solutions across teams.
+Much cheaper
 
-#####
-Question – What personal impact have I made this year? What am I proudest of?
+💰 Cost comparison (approx India region)
+Instance	vCPU	RAM	Relative Cost
+m5.2xlarge	8	32 GB	100%
+r5a.large	2	16 GB	~20–25% of cost
+r5a.xlarge	4	32 GB	~45–50% of cost
 
-Answer:
+r5a.xlarge is often the best cost-optimised replacement for m5.2xlarge in Jenkins.
 
-Designed and implemented certificate automation that integrates with Venafi to automatically detect expiring certificates and trigger renewal. The solution also provisions certificates seamlessly whenever a new EC2 instance or Jenkins master is created, ensuring zero downtime. Overcoming the challenges of working with Venafi APIs was a significant learning experience, and completing this automation has been one of my key achievements this year.
+🔥 My recommendation for Jenkins
 
-Learned Docker, EKS, and foundational AI concepts, which have improved my technical efficiency and prepared me to take on more complex projects in the future.
+Moving to r5a.large → only if it's a small Jenkins with light workloads
 
-Proudest moment: delivering automation that reduced manual effort, prevented potential outages, and contributed to cost savings and reliability improvements
+Better choice: r5a.xlarge (40–50% cost saving and stable performance)
 
-Following up on this ticket. As we are now past Q3, resolving this blocker is urgent and a high priority for our team.
+If you want, I can check:
+👉 Exact CPU/RAM usage calculations
+👉 How many executors you should run
+👉 Which instance is best (r5a.large vs r5a.xlarge vs m5.large)
 
-Could you please provide a status update on the implementation of the exception process? We specifically need a clear timeline for when this will be unblocked so we can plan our activities.
-
-This needs to be fixed as soon as possible. Thank you.
-
-All,
-
-This ticket is following up on the critical blocker preventing EC2 AMI promotions due to the lack of an exception process.
-
-The timeline for a resolution has now extended beyond Q3, making this an urgent priority. Our team is unable to proceed until this is resolved.
-
-@Philip P.R. Rebbeck, @Nick Garratt: Could you please provide a detailed status update and a definitive timeline for the implementation of the SNow exception process or a suitable workaround? Clarity on the path forward is required immediately.
-
-Thank you everyone for your kind wishes 🙏. The surgery went well and I’m recovering fine. From today, I’m joining back."
-
-
-For cost-saving purposes, we will be removing Datadog CI Visibility from the Datadog dashboard.
-This feature is not required for our current work, and removing it will help reduce our overall Datadog cost.
-
-If you have any concerns or need this feature for any specific reason, please let me know.
-
-Here is a clean and professional summary you can paste directly into your ticket:
-
-
----
-
-Summary of Jenkins RBAC Permissions (Matrix Authorization Strategy)
-
-We reviewed the RBAC configuration in Jenkins, specifically the Overall → Read and Overall → Administer permissions. The following points clarify how these permissions work:
-
-1. Overall → Read
-
-This permission only allows a user to view Jenkins UI.
-
-The user can log in and see dashboards, jobs, and build history (if job-level read permissions are also granted).
-
-It does not allow any modifications to jobs, configuration, credentials, or system settings.
-
-This is essentially view-only access, not admin access.
-
-
-
-2. Overall → Administer
-
-This is the highest privilege in Jenkins.
-
-Provides full control over Jenkins, including:
-
-Changing configurations
-
-Managing plugins
-
-Editing/deleting jobs
-
-Managing credentials and nodes
-
-
-Jenkins does not support “read-only admin.”
-If a user has Administer, they automatically get full write privileges.
-
-
-
-3. Important Note
-
-If we want users to have read-only access, we must give them only “Overall → Read” and remove the “Administer” permission.
-
-At least one group/user must retain Administer access to avoid locking out Jenkins administrators.
-
-
-
-4. Conclusion
-
-Read-only admin access is not possible in Jenkins.
-
-The correct approach is:
-
-Admin users → Overall → Administer
-
-Read-only users → Overall → Read (plus job-level read permissions as needed)
-
-
-
-
-
-
----
-
-If you want, I can also format it in bullet points or a shorter version depending on your ticket style.
+Just tell me what your average Jenkins load looks like.
