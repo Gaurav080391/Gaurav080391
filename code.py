@@ -965,3 +965,7 @@ pipeline {
 
 
 We are using the same mailbox for all certificate alerts. I’ll update the email distribution and take care of this.
+
+
+Thank you! Yes, we did—hope you had a great New Year as well.
+Understood on the tickets, will focus on closing them down.
