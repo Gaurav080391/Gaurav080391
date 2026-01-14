@@ -94,3 +94,9 @@ If you want, I can check:
 👉 Which instance is best (r5a.large vs r5a.xlarge vs m5.large)
 
 Just tell me what your average Jenkins load looks like.
+
+
+
+Hi ,
+The recent AMI security scan for our Jenkins agents is flagging X11-related packages as non-compliant. On checking the AMI, I found that X11 components along with Chrome and Xvfb are installed, which suggests the AMI may be used for Selenium/UI tests.
+Removing these packages would fix the scan issue but could impact any jobs relying on GUI-based Selenium. Could you please advise how you’d like to proceed — for example, separating Selenium agents from the default Jenkins AMI or temporarily accepting the exception?
