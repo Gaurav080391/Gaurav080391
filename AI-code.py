@@ -349,5 +349,7 @@ Jenkins items: Go to Manage Jenkins > Plugins > Updates. Update everything. If a
 Re-scan: Once updated, wait about 15-30 minutes for Amazon Inspector to automatically refresh the scan.
 
 Would you like me to help you identify which specific Jenkins plugins are known to carry these old libraries?
+
+Our personnel strategy for the AWS to GCP migration focuses on a "hybrid-talent" approach, combining the recruitment of a Lead GCP Cloud Architect to design the landing zone with the intensive upskilling of our current AWS-certified engineers. We will utilize Google Cloud Skills Boost and role-based "delta training" to bridge the knowledge gap between AWS services (e.g., EC2, S3) and their GCP equivalents (Compute Engine, Cloud Storage), ensuring our team retains critical business context while gaining platform expertise. To maintain project velocity, we will onboard specialized migration contractors for a six-month duration to assist with initial data transfers and automated CI/CD pipeline refactoring, eventually handing off the optimized environment to a fully upskilled internal DevOps team.
                                                                                                                   
 
