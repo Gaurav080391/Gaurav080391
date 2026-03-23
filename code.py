@@ -969,3 +969,15 @@ We are using the same mailbox for all certificate alerts. I’ll update the emai
 
 Thank you! Yes, we did—hope you had a great New Year as well.
 Understood on the tickets, will focus on closing them down.
+
+
+--query "VpcEndpoints[?CreationTimestamp<=\`${env.CUTOFF}\` && Tags[?Key=='Used_by_team' && Value=='gpbw01']].[VpcEndpointId,ServiceName,CreationTimestamp,VpcId,VpcEndpointType,Tags]"
+
+def rawOutput = sh(
+    script: """
+    /opt/build_tools/awscli2/2.13.32/bin/aws ec2 describe-vpc-endpoints --region ${region} \
+    --query "VpcEndpoints[?CreationTimestamp<=\`${env.CUTOFF}\` && Tags[?Key=='Used_by_team' && Value=='gpbw01']].[VpcEndpointId,ServiceName,CreationTimestamp,VpcId,VpcEndpointType,Tags]" \
+    --output json
+    """,
+    returnStdout: true
+)
