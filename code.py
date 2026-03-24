@@ -1090,3 +1090,26 @@ DevOps Engineering Team
 ​Review the VPC Endpoint ID and Service Name below.
 ​If your project/pipeline relies on an endpoint, change the Audit Status to "DO NOT DELETE" and add your Team/Owner name.
 ​If an endpoint remains "Pending Verification" by the cutoff date, it will be removed in the next BAU window.
+
+
+######
+
+Hi Team,
+
+We are currently performing an audit and decommissioning activity for unused VPC endpoints in our AWS Jenkins infrastructure account.
+
+As part of this exercise, we have identified several endpoints that have shown no activity over the defined period. Based on our ticket history, you were involved in the creation of one or more of these endpoints.
+
+We request you to please review the details and update the status on the Confluence page accordingly:
+
+- If the endpoint is still in use, mark it as “ACTIVE – DO NOT DELETE”
+- If the endpoint is no longer required, mark it as “INACTIVE”
+
+This will help us proceed with the necessary actions from our side.
+
+Kindly update the status at the earliest to avoid any unintended impact.
+
+Please reach out if you have any questions or need assistance.
+
+Thanks & Regards,
+[Your Name]
