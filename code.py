@@ -984,3 +984,109 @@ def rawOutput = sh(
 
 
 Thanks for highlighting this. As the ITSO for the team, I’ll take this forward and align with my manager to ensure the BIA review is completed and the critical cloud violations are addressed. I’ll share an update with timelines shortly.”
+
+
+
+To make this Confluence page look professional and functional for an engineering team, it’s best to move away from a single paragraph and use a structured, actionable layout.
+Here is a revised version that organizes the information into Purpose, Process, and Compliance Tracking.
+Unused VPC Endpoint Management: AWS Jenkins Infrastructure
+Overview
+The purpose of this page is to monitor, audit, and manage VPC endpoints within the AWS Jenkins Infrastructure Account. To optimize cloud expenditure and maintain a clean network architecture, endpoints showing no activity over a rolling 90-day period are subject to decommissioning.
+Audit & Deletion Policy
+
+
+Tips for Confluence Formatting:
+Use the "Info" Macro: Wrap the Overview section in an Info or Note macro to make it stand out at the top.
+Status Lozenge: Use the /status macro in the "Status" column of your table (e.g., [DELETED] in red or [IN REVIEW] in yellow).
+Automated Metrics: If possible, use an AWS-to-Confluence integration or an iframe to display a live dashboard of cost savings from these deletions.
+Would you like me to help you draft the Jira ticket template or a Slack notification to send to the team before you delete an endpoint?
+
+
+That sounds like a solid, risk-managed approach. Since you can't send individual notifications, a broad "Call to Action" email combined with the Confluence page as a Single Source of Truth is the best way to handle this without accidentally breaking a Jenkins pipeline.
+Here is a formal email draft and an updated structure for your Confluence page to support this "Self-Service" verification process.
+Email Draft: Action Required – Audit of Unused VPC Endpoints
+Subject: [Action Required] Audit of Unused VPC Endpoints in AWS Jenkins Infrastructure Account
+Hi Team,
+We are currently performing a cost-optimization and compliance audit of the AWS Jenkins Infrastructure Account.
+We have identified several VPC endpoints that appear to be unused based on recent metrics. To avoid any disruption to CI/CD workflows, we request that all users review the list of identified endpoints on our Confluence page:
+[Link to Confluence Page: Unused VPC endpoint in AWS Jenkins Infrastructure Account]
+Action Required:
+If an endpoint is still required: Please update the "Status" column on the Confluence page to "In Use" and include your name/team by [Date].
+If no action is taken: These endpoints will be scheduled for deletion during the next BAU Planned Change Request (CR).
+Thank you for helping us optimize our cloud infrastructure costs.
+Best regards,
+[Your Name]
+DevOps Engineering Team
+Updated Confluence Page Layout
+Since you want users to update the page themselves, you should add a clear "User Action" section and a table they can edit.
+Audit Tracker: VPC Endpoint Decommissioning
+Instructions for Users
+Review the VPC Endpoint ID and Service Name below.
+If your project/pipeline relies on an endpoint, change the Audit Status to "DO NOT DELETE" and add your Team/Owner name.
+If an endpoint remains "Pending Verification" by the cutoff date, it will be removed in the next BAU window.
+
+
+
+
+
+
+To ensure infrastructure stability, the following protocol must be observed before any deletion:
+Identification: Review the usage metrics via CloudWatch or Trusted Advisor to identify "Idle" endpoints.
+Verification: Cross-reference endpoint IDs with active Jenkins controller configurations and shared library dependencies.
+Notification: Stakeholders must be notified via the #devops-alerts channel 48 hours prior to removal.
+Execution: Unused endpoints are deleted, and the change is logged in the tracking table below for compliance auditing.
+Compliance & Change Log
+
+That sounds like a solid, risk-managed approach. Since you can't send individual notifications, a broad "Call to Action" email combined with the Confluence page as a Single Source of Truth is the best way to handle this without accidentally breaking a Jenkins pipeline.
+​Here is a formal email draft and an updated structure for your Confluence page to support this "Self-Service" verification process.
+​Email Draft: Action Required – Audit of Unused VPC Endpoints
+​Subject: [Action Required] Audit of Unused VPC Endpoints in AWS Jenkins Infrastructure Account
+​Hi Team,
+​We are currently performing a cost-optimization and compliance audit of the AWS Jenkins Infrastructure Account.
+​We have identified several VPC endpoints that appear to be unused based on recent metrics. To avoid any disruption to CI/CD workflows, we request that all users review the list of identified endpoints on our Confluence page:
+​[Link to Confluence Page: Unused VPC endpoint in AWS Jenkins Infrastructure Account]
+​Action Required:
+​If an endpoint is still required: Please update the "Status" column on the Confluence page to "In Use" and include your name/team by [Date].
+​If no action is taken: These endpoints will be scheduled for deletion during the next BAU Planned Change Request (CR).
+​Thank you for helping us optimize our cloud infrastructure costs.
+​Best regards,
+
+
+Since you need the team to actively engage with the page and verify their endpoints before the BAU Change Request (CR), the content should be direct, structured, and easy for a developer to skim.
+Here is the full content for your Confluence page. You can copy and paste this directly into your editor.
+Audit & Decommissioning: Unused VPC Endpoints
+1. Objective
+To optimize AWS Jenkins Infrastructure costs and maintain security compliance, we are identifying and removing VPC endpoints that have shown zero activity over the last 90 days. This process ensures our network architecture remains lean and cost-effective.
+2. User Action Required
+We have compiled a list of endpoints slated for deletion. If your project or pipeline relies on any of the endpoints listed below, you must update this page by [Insert Date, e.g., Friday, March 27th].
+Instructions:
+Locate your Endpoint ID in the table below.
+Change the Audit Status to "ACTIVE - DO NOT DELETE".
+Add your Team Name/Owner and a brief reason (e.g., "Used for S3 artifact uploads").
+If no owner is identified by the cutoff date, the endpoint will be included in the next BAU Planned Change Request (CR) for deletion.
+3. Endpoint Audit Tracker
+Tip: Use the /status macro for the "Audit Status" column to make it visually clear.
+
+
+4. Decommissioning Schedule
+Verification Deadline: [Insert Date]
+CR Submission Date: [Insert Date]
+Execution Window (BAU): [Insert Date/Time of your maintenance window]
+5. Recovery Protocol
+In the event of an accidental deletion, the following configuration details have been backed up to allow for rapid recreation:
+Associated Security Groups
+Subnet IDs
+Private DNS settings
+Pro-Tips for your Confluence Page:
+Use the "Panel" Macro: Put the User Action Required section inside a red or amber panel so users don't miss it.
+Tag People: If you know which teams might be using a specific endpoint, @mention them directly in the "Notes" column to get a faster response.
+Would you like me to create a quick "Rollback Plan" section you can include in your CR documentation just in case something goes wrong after the deletion?
+[Your Name]
+DevOps Engineering Team
+​Updated Confluence Page Layout
+​Since you want users to update the page themselves, you should add a clear "User Action" section and a table they can edit.
+​Audit Tracker: VPC Endpoint Decommissioning
+​Instructions for Users
+​Review the VPC Endpoint ID and Service Name below.
+​If your project/pipeline relies on an endpoint, change the Audit Status to "DO NOT DELETE" and add your Team/Owner name.
+​If an endpoint remains "Pending Verification" by the cutoff date, it will be removed in the next BAU window.
