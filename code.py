@@ -981,3 +981,6 @@ def rawOutput = sh(
     """,
     returnStdout: true
 )
+
+
+Thanks for highlighting this. As the ITSO for the team, I’ll take this forward and align with my manager to ensure the BIA review is completed and the critical cloud violations are addressed. I’ll share an update with timelines shortly.”
