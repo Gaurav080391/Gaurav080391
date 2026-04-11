@@ -589,3 +589,12 @@ stages {
     }
 }
 This hybrid approach is what most experienced teams land on in practice.
+
+
+
+
+Here's a sharp, interview-ready answer that shows depth:
+How to Answer in an Interview
+"Can you explain Scripted vs Declarative Pipeline?"
+"Both achieve the same goal — pipeline as code — but they reflect different philosophies. Scripted pipeline is pure Groovy inside a node {} block, which gives you full programmatic control but puts the entire burden of structure, error handling, and readability on you. Declarative came later as Jenkins' opinionated wrapper — it enforces a schema, so Jenkins can validate your pipeline before it even runs, catching syntax errors at parse time rather than mid-deployment at 2 AM.
+In practice, I default to Declarative for 90% of pipelines because it's self-documenting — a new team member can read it and understand the flow without knowing Groovy. But I reach for Scripted — or the script {} block inside Declarative — when I need dynamic stage generation, like looping over a service manifest to create parallel deploy stages at runtime. That hybrid approach gives you the best of both worlds."
