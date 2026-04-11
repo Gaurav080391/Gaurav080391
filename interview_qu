@@ -261,3 +261,168 @@ Take a live mock interview (like real panel)
 Give GCP quick mapping from AWS (1-hour prep)
 Help you prepare HR + behavioral answers
 Just tell me 👍
+
+
+
+#
+
+Scripted vs Declarative Pipeline in Jenkins
+Both are ways to define Jenkins pipelines as code, but they differ significantly in syntax, flexibility, and ease of use.
+Scripted Pipeline
+The original pipeline syntax — pure Groovy code wrapped in a node block. You have full programmatic control.
+node('linux-agent') {
+    def deployEnv = 'staging'
+    def imageTag = ''
+
+    try {
+        stage('Checkout') {
+            checkout scm
+        }
+
+        stage('Build & Test') {
+            parallel(
+                unitTests: {
+                    sh 'mvn test -Dtest=UnitTests'
+                },
+                integrationTests: {
+                    sh 'mvn test -Dtest=IntegrationTests'
+                }
+            )
+        }
+
+        stage('Docker Build') {
+            imageTag = sh(
+                script: "git rev-parse --short HEAD",
+                returnStdout: true
+            ).trim()
+            sh "docker build -t myapp:${imageTag} ."
+        }
+
+        stage('Deploy') {
+            if (env.BRANCH_NAME == 'main') {
+                deployEnv = 'production'
+            }
+            sh "helm upgrade --install myapp ./chart --set image.tag=${imageTag} --namespace ${deployEnv}"
+        }
+
+    } catch (Exception e) {
+        currentBuild.result = 'FAILURE'
+        slackSend(color: 'danger', message: "Build failed: ${e.message}")
+        throw e
+    } finally {
+        cleanWs()
+    }
+}
+Key traits: node {} at root, full Groovy, manual try/catch, no enforced structure.
+Declarative Pipeline
+The modern, structured syntax introduced later. Jenkins parses it — you declare what you want, not how to do it.
+pipeline {
+    agent { label 'linux-agent' }
+
+    environment {
+        IMAGE_TAG = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+        DEPLOY_ENV = 'staging'
+    }
+
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        retry(2)
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build & Test') {
+            parallel {
+                stage('Unit Tests') {
+                    steps { sh 'mvn test -Dtest=UnitTests' }
+                }
+                stage('Integration Tests') {
+                    steps { sh 'mvn test -Dtest=IntegrationTests' }
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh "docker build -t myapp:${IMAGE_TAG} ."
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
+            steps {
+                sh "helm upgrade --install myapp ./chart --set image.tag=${IMAGE_TAG} --namespace production"
+            }
+        }
+    }
+
+    post {
+        failure {
+            slackSend(color: 'danger', message: "Build failed on ${env.BRANCH_NAME}")
+        }
+        always {
+            cleanWs()
+        }
+    }
+}
+Key traits: pipeline {} at root, enforced structure, built-in post, when, options, environment blocks.
+Head-to-Head Comparison
+Aspect
+Scripted
+Declarative
+Syntax root
+node {}
+pipeline {}
+Learning curve
+Steep — needs Groovy knowledge
+Gentle — reads like config
+Error handling
+Manual try/catch/finally
+Built-in post {} block
+Conditional logic
+Full Groovy if/else, loops
+when {} directive (limited but clean)
+Environment vars
+def variables or withEnv {}
+Dedicated environment {} block
+Validation
+Runtime only — fails mid-run
+Pre-run syntax validation by Jenkins
+IDE/Blue Ocean support
+Partial
+Full
+Shared Libraries
+Full power
+Full power (same)
+Best for
+Complex dynamic logic
+Standard CI/CD pipelines
+When to use which (senior perspective)
+Use Declarative for 90% of your pipelines — microservice CI, Docker builds, Helm deploys, multi-branch pipelines. It's readable, team-friendly, and easy to audit in PRs.
+Reach for Scripted when you genuinely need:
+Dynamic stage generation (e.g., looping over a list of 20 microservices to create stages at runtime)
+Complex Groovy DSL logic that when {} can't express
+Legacy pipelines already written in Scripted that aren't worth migrating
+Pro tip: You can also mix both — embed a script {} block inside Declarative steps when you need a burst of Groovy logic without rewriting the whole pipeline in Scripted.
+stages {
+    stage('Dynamic Logic') {
+        steps {
+            script {
+                // Full Groovy power inside Declarative
+                def services = ['auth', 'payment', 'notification']
+                services.each { svc ->
+                    sh "kubectl rollout status deployment/${svc}"
+                }
+            }
+        }
+    }
+}
+This hybrid approach is what most experienced teams land on in practice.
