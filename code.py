@@ -1113,3 +1113,25 @@ Please reach out if you have any questions or need assistance.
 
 Thanks & Regards,
 [Your Name]
+
+
+
+########
+
+
+# DevX: pre-download jenkins-template-plugin HPI if present in plugin list
+if grep -Eqi 'jenkins-template-plugin' "$PLUGIN_FILE" >/dev/null 2>&1; then
+    echo "Detected jenkins-template-plugin. Pre-downloading HPI..."
+
+    HPI_URL="https://nexus3-uat.systems.uk.hsbc:8081/nexus/repository/share_data_n3u/download/plugins/jenkins-template-plugin/1.1.0/jenkins-template-plugin-1.1.0.hpi"
+
+    curl -fSL --user "${USER}:${PASS}" \
+        -o "${PLUGINS_LOCATION}/jenkins-template-plugin.jpi" \
+        "$HPI_URL" || {
+        echo "Error: failed to download jenkins-template-plugin from $HPI_URL"
+        exit 1
+    }
+
+    chmod 640 "${PLUGINS_LOCATION}/jenkins-template-plugin.jpi"
+    chown cloudbees-core-cm:cloudbees-core-cm "${PLUGINS_LOCATION}/jenkins-template-plugin.jpi" || true
+fi
