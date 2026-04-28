@@ -1153,3 +1153,11 @@ ENV no_proxy=$NO_PROXY
 
 # Now npm install will use the proxy to reach Nexus
 RUN npm install --verbose
+
+
+docker build \
+  --build-arg HTTP_PROXY=${HTTP_PROXY} \
+  --build-arg HTTPS_PROXY=${HTTPS_PROXY} \
+  --build-arg NO_PROXY=${NO_PROXY} \
+  -t your-image-name .
+
