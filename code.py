@@ -1135,3 +1135,21 @@ if grep -Eqi 'jenkins-template-plugin' "$PLUGIN_FILE" >/dev/null 2>&1; then
     chmod 640 "${PLUGINS_LOCATION}/jenkins-template-plugin.jpi"
     chown cloudbees-core-cm:cloudbees-core-cm "${PLUGINS_LOCATION}/jenkins-template-plugin.jpi" || true
 fi
+
+
+
+# ... after FROM statement ...
+
+# Declare build arguments
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG NO_PROXY
+
+# (Optional but recommended) Set them as environment variables 
+# so npm and other tools pick them up automatically
+ENV http_proxy=$HTTP_PROXY
+ENV https_proxy=$HTTPS_PROXY
+ENV no_proxy=$NO_PROXY
+
+# Now npm install will use the proxy to reach Nexus
+RUN npm install --verbose
