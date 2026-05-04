@@ -356,5 +356,29 @@ Our personnel strategy for the AWS to GCP migration focuses on a "hybrid-talent"
 
 Your Maven build is failing because of a mismatch between the Java version you are trying to target and the Java version actually running the build.
 The specific error is:
-[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile ... Fatal error compiling: invalid flag: --release                                                                                
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile ... Fatal error compiling: invalid flag: --release  
+
+
+
+Hi Jeenesh,
+
+Thank you for the follow-up on RITM42611257.
+
+Please find the requested details below:
+
+**Exact SNS Topic ARN:**
+arn:aws:sns:us-east-1:806199016981:AmazonIpSpaceChanged
+
+**Confirmation it is AWS-managed:**
+This SNS topic is owned and managed by AWS (account ID: 806199016981 belongs to AWS, not our account). It is the official AWS IP Space Change Notification topic, used by AWS to notify subscribers whenever AWS updates its public IP address ranges.
+
+AWS Reference:
+https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html
+
+As per the above documentation, AWS publishes all IP range changes to this SNS topic. Subscribing to it via VPC Endpoint policy is a standard and recommended AWS practice for keeping IP allowlists up to date.
+
+Please let me know if any further information is needed.
+
+Regards,
+Gaurav                                                                              
 
