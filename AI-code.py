@@ -380,5 +380,31 @@ As per the above documentation, AWS publishes all IP range changes to this SNS t
 Please let me know if any further information is needed.
 
 Regards,
-Gaurav                                                                              
+Gaurav       
+
+
+#####Infrastructure
+Extent of Test
+EC2 (ASG)
+DR-Full
+Dual Site
+DR-Full
+EFS / S3 Storage
+DR-Full
+Backup Restore
+DR-Full
+Security & IAM
+DR-Full
+VPC / ALB / Route53
+DR-Full
+CloudWatch Monitoring
+DR-Full
+Lambda Automation
+DR-Full
+Terraform Infrastructure
+DR-Full
+AMI Recovery
+DR-Full
+EKS / Fargate
+DR-Full                                                                       
 
