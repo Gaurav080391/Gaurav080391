@@ -408,3 +408,5 @@ DR-Full
 EKS / Fargate
 DR-Full                                                                       
 
+
+"Generate a Grafana dashboard JSON structure with a prometheus datasource, filtering by label environment aws-prod, showing a timeseries panel for a custom queue metric per controller"
