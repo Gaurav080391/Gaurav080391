@@ -1,0 +1,214 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Jenkins Queue Pressure Monitoring Dashboard",
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "liveNow": true,
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "UID"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 50
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ]
+        },
+        "textMode": "value"
+      },
+      "targets": [
+        {
+          "expr": "sum(default_jenkins_queue_size_value{controller_name=~\"$Controller\"})",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total Queue Size",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "UID"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "expr": "100 * (sum(default_jenkins_executor_count_value{controller_name=~\"$Controller\"}) - sum(default_jenkins_executor_free_count_value{controller_name=~\"$Controller\"})) / sum(default_jenkins_executor_count_value{controller_name=~\"$Controller\"})",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Executor Utilization %",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "UID"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          }
+        }
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "default_jenkins_queue_size_value{controller_name=~\"$Controller\"}",
+          "legendFormat": "{{controller_name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Queue Trend Per Controller",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 41,
+  "tags": [
+    "jenkins",
+    "queue"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": ".*"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "UID"
+        },
+        "includeAll": true,
+        "label": "Controller",
+        "multi": true,
+        "name": "Controller",
+        "query": "label_values(up, controller_name)",
+        "refresh": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "title": "Jenkins Queue Pressure Dashboard",
+  "uid": "jenkins-queue-pressure",
+  "version": 1
+}
