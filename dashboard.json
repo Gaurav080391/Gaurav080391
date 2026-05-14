@@ -655,3 +655,970 @@
           "editorMode": "code",
           "expr": "sum(jenkins_executor_count_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}) - sum(jenkins_executor_free_count_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"})",
           "inst
+
+
+
+
+######
+
+
+
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Jenkins AWS PROD - Total Jobs, Builds, Node Status across all Controllers",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "panels": [],
+      "title": "📊 Fleet Summary — AWS PROD",
+      "type": "row"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total number of jobs across all selected AWS PROD controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 3000 },
+              { "color": "red", "value": 5000 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 0, "y": 1 },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(jenkins_job_count_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"})",
+          "instant": false,
+          "legendFormat": "Total Jobs",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total Jobs — PROD",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total successful builds across all selected AWS PROD controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 5000 },
+              { "color": "red", "value": 10000 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 6, "y": 1 },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(jenkins_builds_success_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"})",
+          "instant": false,
+          "legendFormat": "Successful Builds",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Successful Builds — PROD",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total failed builds across all selected AWS PROD controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 100 },
+              { "color": "red", "value": 500 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 12, "y": 1 },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(jenkins_builds_failed_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"})",
+          "instant": false,
+          "legendFormat": "Failed Builds",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Failed Builds — PROD",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total build queue size across all selected AWS PROD controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 50 },
+              { "color": "red", "value": 200 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 18, "y": 1 },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(jenkins_queue_size_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"})",
+          "instant": false,
+          "legendFormat": "Queue Size",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Build Queue Size — PROD",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 8 },
+      "id": 10,
+      "panels": [],
+      "title": "🔢 Build Counts — All States",
+      "type": "row"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total builds across all states (success + failed + unstable + aborted)",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 10000 },
+              { "color": "red", "value": 50000 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 0, "y": 9 },
+      "id": 11,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(jenkins_builds_success_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"} + jenkins_builds_failed_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"} + jenkins_builds_unstable_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"} + jenkins_builds_aborted_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"})",
+          "instant": false,
+          "legendFormat": "Total Builds",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total Builds (All States) — PROD",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total unstable builds across all selected PROD controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 50 },
+              { "color": "red", "value": 200 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 6, "y": 9 },
+      "id": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(jenkins_builds_unstable_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"})",
+          "instant": false,
+          "legendFormat": "Unstable Builds",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Unstable Builds — PROD",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total aborted builds across all selected PROD controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 50 },
+              { "color": "red", "value": 200 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 12, "y": 9 },
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(jenkins_builds_aborted_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"})",
+          "instant": false,
+          "legendFormat": "Aborted Builds",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Aborted Builds — PROD",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Build success rate % across all selected PROD controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 70 },
+              { "color": "green", "value": 90 }
+            ]
+          },
+          "unit": "percent",
+          "min": 0,
+          "max": 100
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 18, "y": 9 },
+      "id": 14,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "100 * sum(jenkins_builds_success_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}) / (sum(jenkins_builds_success_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}) + sum(jenkins_builds_failed_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}) + sum(jenkins_builds_unstable_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}) + sum(jenkins_builds_aborted_build_count{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}))",
+          "instant": false,
+          "legendFormat": "Success Rate %",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Build Success Rate % — PROD",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 16 },
+      "id": 20,
+      "panels": [],
+      "title": "🖥️ Node & Executor Health",
+      "type": "row"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total online nodes across all selected PROD controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 10 },
+              { "color": "green", "value": 50 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 0, "y": 17 },
+      "id": 21,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(jenkins_node_count_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"})",
+          "instant": false,
+          "legendFormat": "Total Nodes",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total Nodes — PROD",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total executors across all selected PROD controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 50 },
+              { "color": "green", "value": 200 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 6, "y": 17 },
+      "id": 22,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(jenkins_executor_count_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"})",
+          "instant": false,
+          "legendFormat": "Total Executors",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total Executors — PROD",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Free executors across all selected PROD controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "orange", "value": 10 },
+              { "color": "green", "value": 50 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 12, "y": 17 },
+      "id": 23,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(jenkins_executor_free_count_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"})",
+          "instant": false,
+          "legendFormat": "Free Executors",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Free Executors — PROD",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Busy executors = Total - Free across all selected PROD controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 100 },
+              { "color": "red", "value": 200 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 18, "y": 17 },
+      "id": 24,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+
+
+
+
+
+
+
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(jenkins_executor_count_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}) - sum(jenkins_executor_free_count_value{en
+
+
+#######
+
+
+
+id": 24,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(jenkins_executor_count_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}) - sum(jenkins_executor_free_count_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"})",
+          "instant": false,
+          "legendFormat": "Busy Executors",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Busy Executors — PROD",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 24 },
+      "id": 30,
+      "panels": [],
+      "title": "📈 Trends Over Time",
+      "type": "row"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Jobs per controller over time — PROD",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": { "type": "linear" },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 80 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 25 },
+      "id": 31,
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "jenkins_job_count_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}",
+          "instant": false,
+          "legendFormat": "{{controller_name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Jobs per Controller Over Time — PROD",
+      "transparent": true,
+      "type": "timeseries"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Build queue depth per controller over time — PROD",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": { "type": "linear" },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 80 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 25 },
+      "id": 32,
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "jenkins_queue_size_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}",
+          "instant": false,
+          "legendFormat": "{{controller_name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Build Queue Depth per Controller — PROD",
+      "transparent": true,
+      "type": "timeseries"
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 34 },
+      "id": 40,
+      "panels": [],
+      "title": "📋 Per Controller Breakdown Table",
+      "type": "row"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Per controller breakdown — Jobs, Builds, Executors, Queue",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 80 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 35 },
+      "id": 41,
+      "options": {
+        "cellHeight": "sm",
+        "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false },
+        "showHeader": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "jenkins_job_count_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}",
+          "instant": true,
+          "legendFormat": "{{controller_name}}",
+          "range": false,
+          "refId": "Jobs"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "jenkins_executor_count_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}",
+          "instant": true,
+          "legendFormat": "{{controller_name}}",
+          "range": false,
+          "refId": "Executors"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "jenkins_queue_size_value{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}",
+          "instant": true,
+          "legendFormat": "{{controller_name}}",
+          "range": false,
+          "refId": "Queue"
+        }
+      ],
+      "title": "Per Controller Summary Table — PROD",
+      "transparent": true,
+      "type": "table"
+    }
+
+  ],
+  "preload": false,
+  "refresh": "2m",
+  "schemaVersion": 41,
+  "tags": ["jenkins", "aws", "prod", "ci"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "UID"
+        },
+        "definition": "query_result(up{environment=\"$HSBC_Environment\"})",
+        "description": "Select one or more PROD controllers",
+        "includeAll": true,
+        "allValue": ".*",
+        "label": "PROD Controller",
+        "multi": true,
+        "name": "Controller",
+        "options": [],
+        "query": {
+          "query": "query_result(up{environment=\"$HSBC_Environment\"})",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": ".*controller_name=\"(.*?)\".*",
+        "sort": 5,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "aws-prod",
+          "value": "aws-prod"
+        },
+        "description": "PROD environment label",
+        "hide": 2,
+        "label": "HSBC_Environment",
+        "name": "HSBC_Environment",
+        "query": "aws-prod",
+        "skipUrlSync": true,
+        "type": "constant"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "CI Total Jobs & Builds — AWS PROD",
+  "uid": "jenkins-aws-prod-full",
+  "version": 1
+}
