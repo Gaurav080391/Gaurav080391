@@ -1859,3 +1859,942 @@
   "uid": "jenkins-aws-prod-analytics",
   "version": 1
 }
+
+
+
+
+
+
+#############
+
+
+
+
+Content is user-generated and unverified.
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Jenkins Build Analytics — Total Builds, Completion Status, Slow Builds per Controller",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "panels": [],
+      "title": "📊 Total Build Summary — All Controllers",
+      "type": "row"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total number of builds across all selected controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 5, "x": 0, "y": 1 },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_total_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Total",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Total Builds (All States)",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total successful builds across all selected controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "green" },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 5, "x": 5, "y": 1 },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_success_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Success",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "✅ Successful Builds",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total failed builds across all selected controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "red" },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 100 },
+              { "color": "red", "value": 500 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 5, "x": 10, "y": 1 },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_failure_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Failure",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "❌ Failed Builds",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total unstable builds across all selected controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "orange" },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 50 },
+              { "color": "red", "value": 200 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 4, "x": 15, "y": 1 },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_unstable_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Unstable",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "⚠️ Unstable Builds",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total aborted builds across all selected controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "#5794F2" },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 50 },
+              { "color": "red", "value": 200 }
+            ]
+          },
+          "unit": "locale"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 5, "x": 19, "y": 1 },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_aborted_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Aborted",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "🚫 Aborted Builds",
+      "transparent": true,
+      "type": "stat"
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 8 },
+      "id": 10,
+      "panels": [],
+      "title": "🥧 Build Completion Status & Trends",
+      "type": "row"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Build completion status breakdown across all selected controllers",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "hideFrom": { "legend": false, "tooltip": false, "viz": false } },
+          "mappings": []
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Success" }, "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Failure" }, "properties": [{ "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Unstable" }, "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Aborted" }, "properties": [{ "id": "color", "value": { "fixedColor": "#5794F2", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Not Built" }, "properties": [{ "id": "color", "value": { "fixedColor": "gray", "mode": "fixed" } }] }
+        ]
+      },
+      "gridPos": { "h": 10, "w": 8, "x": 0, "y": 9 },
+      "id": 11,
+      "options": {
+        "displayLabels": ["percent"],
+        "legend": { "displayMode": "table", "placement": "right", "showLegend": true, "values": ["value", "percent"] },
+        "pieType": "pie",
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_success_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Success",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_failure_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Failure",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_unstable_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Unstable",
+          "range": false,
+          "refId": "C"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_aborted_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Aborted",
+          "range": false,
+          "refId": "D"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_not_built_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Not Built",
+          "range": false,
+          "refId": "E"
+        }
+      ],
+      "title": "Build Completion Status",
+      "transparent": true,
+      "type": "piechart"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Build trend over time — success vs failure vs unstable vs aborted",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisBorderShow": false,
+            "axisLabel": "Builds",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "gradientMode": "opacity",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": { "type": "linear" },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "mappings": [],
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] },
+          "unit": "short"
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Success" }, "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Failure" }, "properties": [{ "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Unstable" }, "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Aborted" }, "properties": [{ "id": "color", "value": { "fixedColor": "#5794F2", "mode": "fixed" } }] }
+        ]
+      },
+      "gridPos": { "h": 10, "w": 16, "x": 8, "y": 9 },
+      "id": 12,
+      "options": {
+        "legend": { "calcs": ["sum", "lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_success_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[1h]))",
+          "instant": false,
+          "legendFormat": "Success",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_failure_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[1h]))",
+          "instant": false,
+          "legendFormat": "Failure",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_unstable_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[1h]))",
+          "instant": false,
+          "legendFormat": "Unstable",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_aborted_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[1h]))",
+          "instant": false,
+          "legendFormat": "Aborted",
+          "range": true,
+          "refId": "D"
+        }
+      ],
+      "title": "Build Trend Over Time — All Selected Controllers",
+      "transparent": true,
+      "type": "timeseries"
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 19 },
+      "id": 20,
+      "panels": [],
+      "title": "📋 Builds Per Controller Breakdown",
+      "type": "row"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Total builds per controller with success/failure/unstable/aborted breakdown",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "filterable": true,
+            "inspect": false
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Controller" },
+            "properties": [{ "id": "custom.width", "value": 250 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Total" },
+            "properties": [
+              { "id": "custom.width", "value": 100 },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "orange", "value": 1000 }, { "color": "red", "value": 5000 }] } },
+              { "id": "custom.cellOptions", "value": { "type": "color-background" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Success" },
+            "properties": [
+              { "id": "custom.width", "value": 100 },
+              { "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } },
+              { "id": "custom.cellOptions", "value": { "type": "color-text" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Failed" },
+            "properties": [
+              { "id": "custom.width", "value": 100 },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "orange", "value": 10 }, { "color": "red", "value": 50 }] } },
+              { "id": "custom.cellOptions", "value": { "type": "color-background" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Unstable" },
+            "properties": [
+              { "id": "custom.width", "value": 100 },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "orange", "value": 5 }, { "color": "red", "value": 20 }] } },
+              { "id": "custom.cellOptions", "value": { "type": "color-background" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Aborted" },
+            "properties": [
+              { "id": "custom.width", "value": 100 },
+              { "id": "color", "value": { "fixedColor": "#5794F2", "mode": "fixed" } },
+              { "id": "custom.cellOptions", "value": { "type": "color-text" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Success Rate %" },
+            "properties": [
+              { "id": "unit", "value": "percent" },
+              { "id": "decimals", "value": 1 },
+              { "id": "custom.width", "value": 140 },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 70 }, { "color": "green", "value": 90 }] } },
+              { "id": "custom.cellOptions", "value": { "type": "color-background" } }
+            ]
+          }
+        ]
+      },
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 20 },
+      "id": 21,
+      "options": {
+        "cellHeight": "sm",
+        "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false },
+        "showHeader": true,
+        "sortBy": [{ "displayName": "Total", "desc": true }]
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum by(controller_name) (increase(jenkins_runs_total_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "Total"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum by(controller_name) (increase(jenkins_runs_success_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "Success"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum by(controller_name) (increase(jenkins_runs_failure_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "Failed"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum by(controller_name) (increase(jenkins_runs_unstable_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "Unstable"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum by(controller_name) (increase(jenkins_runs_aborted_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "Aborted"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "100 * sum by(controller_name) (increase(jenkins_runs_success_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range])) / sum by(controller_name) (increase(jenkins_runs_total_total{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "SuccessRate"
+        }
+      ],
+      "title": "Builds Per Controller — Breakdown Table",
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": { "byField": "controller_name", "mode": "outer" }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": { "Time": true, "environment": true },
+            "renameByName": {
+              "controller_name": "Controller",
+              "Value #Total": "Total",
+              "Value #Success": "Success",
+              "Value #Failed": "Failed",
+              "Value #Unstable": "Unstable",
+              "Value #Aborted": "Aborted",
+              "Value #SuccessRate": "Success Rate %"
+            },
+            "indexByName": {
+              "controller_name": 0,
+              "Value #Total": 1,
+              "Value #Success": 2,
+              "Value #Failed": 3,
+              "Value #Unstable": 4,
+              "Value #Aborted": 5,
+              "Value #SuccessRate": 6
+            }
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "table"
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 32 },
+      "id": 30,
+      "panels": [],
+      "title": "🐢 Slow Builds — Top Slowest Jobs per Controller",
+      "type": "row"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Top 50 slowest jobs by last build duration. Uses jenkins_builds_last_build_duration_milliseconds — available without perBuildMetrics. Select a controller to filter per master.",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "filterable": true,
+            "inspect": false
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 300 },
+              { "color": "red", "value": 1800 }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Job" },
+            "properties": [
+              { "id": "custom.width", "value": 400 },
+              { "id": "custom.cellOptions", "value": { "type": "auto" } },
+              { "id": "unit", "value": "string" }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Controller" },
+            "properties": [
+              { "id": "custom.width", "value": 220 },
+              { "id": "custom.cellOptions", "value": { "type": "auto" } },
+              { "id": "unit", "value": "string" }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Last Build Duration (s)" },
+            "properties": [
+              { "id": "custom.width", "value": 200 },
+              { "id": "unit", "value": "s" },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "orange", "value": 300 }, { "color": "red", "value": 1800 }] } },
+              { "id": "custom.cellOptions", "value": { "type": "color-background" } }
+            ]
+          }
+        ]
+      },
+      "gridPos": { "h": 14, "w": 24, "x": 0, "y": 33 },
+      "id": 31,
+      "options": {
+        "cellHeight": "sm",
+        "footer": { "countRows": true, "fields": "", "reducer": ["count"], "show": true },
+        "showHeader": true,
+        "sortBy": [{ "displayName": "Last Build Duration (s)", "desc": true }]
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "topk(50, jenkins_builds_last_build_duration_milliseconds{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"} / 1000)",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "🐢 Top 50 Slowest Jobs — Last Build Duration",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "environment": true,
+              "__name__": true
+            },
+            "renameByName": {
+              "jenkins_job": "Job",
+              "controller_name": "Controller",
+              "Value": "Last Build Duration (s)"
+            },
+            "indexByName": {
+              "jenkins_job": 0,
+              "controller_name": 1,
+              "Value": 2
+            }
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "table"
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 47 },
+      "id": 40,
+      "panels": [],
+      "title": "📈 Slow Build Duration Trend — Selected Controller",
+      "type": "row"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Duration trend of top 10 slowest jobs over time. Select a single controller for best results.",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisBorderShow": false,
+            "axisLabel": "Duration",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 5,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": { "type": "linear" },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "line" }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "transparent", "value": null },
+              { "color": "red", "value": 1800 }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 48 },
+      "id": 41,
+      "options": {
+        "legend": { "calcs": ["lastNotNull", "max", "mean"], "displayMode": "table", "placement": "right", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "topk(10, jenkins_builds_last_build_duration_milliseconds{environment=\"$HSBC_Environment\", controller_name=~\"$Controller\"} / 1000)",
+          "instant": false,
+          "legendFormat": "{{jenkins_job}} ({{controller_name}})",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Top 10 Slowest Jobs — Duration Trend",
+      "transparent": true,
+      "type": "timeseries"
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 58 },
+      "id": 50,
+      "panels": [],
+      "title": "📊 Per Controller — Build Status Donut",
+      "type": "row"
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "UID" },
+      "description": "Build status donut per controller. Repeats for each selected controller.",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": { "hideFrom": { "legend": false, "tooltip": false, "viz": false } },
+          "mappings": []
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "Success" }, "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Failure" }, "properties": [{ "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Unstable" }, "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }] },
+          { "matcher": { "id": "byName", "options": "Aborted" }, "properties": [{ "id": "color", "value": { "fixedColor": "#5794F2", "mode": "fixed" } }] }
+        ]
+      },
+      "gridPos": { "h": 10, "w": 6, "x": 0, "y": 59 },
+      "id": 51,
+      "options": {
+        "displayLabels": ["name", "percent"],
+        "legend": { "displayMode": "table", "placement": "right", "showLegend": true, "values": ["value", "percent"] },
+        "pieType": "donut",
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "repeat": "Controller",
+      "repeatDirection": "h",
+      "maxPerRow": 4,
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_success_total{environment=\"$HSBC_Environment\", controller_name=\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Success",
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_failure_total{environment=\"$HSBC_Environment\", controller_name=\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Failure",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_unstable_total{environment=\"$HSBC_Environment\", controller_name=\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Unstable",
+          "range": false,
+          "refId": "C"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "UID" },
+          "editorMode": "code",
+          "expr": "sum(increase(jenkins_runs_aborted_total{environment=\"$HSBC_Environment\", controller_name=\"$Controller\"}[$__range]))",
+          "instant": true,
+          "legendFormat": "Aborted",
+          "range": false,
+          "refId": "D"
+        }
+      ],
+      "title": "$Controller",
+      "transparent": true,
+      "type": "piechart"
+    }
+
+  ],
+  "preload": false,
+  "refresh": "5m",
+  "schemaVersion": 41,
+  "tags": ["jenkins", "aws", "prod", "builds", "analytics"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": { "type": "prometheus", "uid": "UID" },
+        "definition": "label_values(jenkins_runs_total_total{environment=\"$HSBC_Environment\"}, controller_name)",
+        "description": "Select one or more PROD controllers",
+        "includeAll": true,
+        "allValue": ".*",
+        "label": "PROD Controller",
+        "multi": true,
+        "name": "Controller",
+        "options": [],
+        "query": {
+          "query": "label_values(jenkins_runs_total_total{environment=\"$HSBC_Environment\"}, controller_name)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "sort": 5,
+        "type": "query"
+      },
+      {
+        "current": { "text": "aws-prod", "value": "aws-prod" },
+        "description": "PROD environment label",
+        "hide": 2,
+        "label": "HSBC_Environment",
+        "name": "HSBC_Environment",
+        "query": "aws-prod",
+        "skipUrlSync": true,
+        "type": "constant"
+      }
+    ]
+  },
+  "time": { "from": "now-24h", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Jenkins Build Analytics — AWS PROD",
+  "uid": "jenkins-aws-prod-analytics",
+  "version": 1
+}
