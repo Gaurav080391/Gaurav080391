@@ -428,3 +428,16 @@ cache_peer dtmecicd-proxy-routable-proxy.digital-tools.euw1.uat.aws.cloud.hsbc p
 
 # TO:
 cache_peer dtmecicd-proxy-routable-proxy.digital-tools.euw1.uat.aws.cloud.hsbc parent 3128 0 no-query proxy-only tls ssl-unclean-shutdown tls-options=NO_SSLv3,NO_TLSv1 tls-default-ca=off
+
+
+
+
+# Test 1: Direct curl through routable proxy
+curl -x http://dtmecicd-proxy-routable-proxy.digital-tools.euw1.uat.aws.cloud.hsbc:3128 http://www.google.com -v 2>&1 | head -30
+
+# Test 2: Raw TCP connection
+nc -zv dtmecicd-proxy-routable-proxy.digital-tools.euw1.uat.aws.cloud.hsbc 3128
+echo $?
+
+# Test 3: Telnet
+telnet dtmecicd-proxy-routable-proxy.digital-tools.euw1.uat.aws.cloud.hsbc 3128
