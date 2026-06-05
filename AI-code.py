@@ -421,3 +421,10 @@ sum(
     }[$__range]
   )
 )
+
+
+# FROM:
+cache_peer dtmecicd-proxy-routable-proxy.digital-tools.euw1.uat.aws.cloud.hsbc parent 3128 0 no-query proxy-only
+
+# TO:
+cache_peer dtmecicd-proxy-routable-proxy.digital-tools.euw1.uat.aws.cloud.hsbc parent 3128 0 no-query proxy-only tls ssl-unclean-shutdown tls-options=NO_SSLv3,NO_TLSv1 tls-default-ca=off
