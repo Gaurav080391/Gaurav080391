@@ -441,3 +441,68 @@ echo $?
 
 # Test 3: Telnet
 telnet dtmecicd-proxy-routable-proxy.digital-tools.euw1.uat.aws.cloud.hsbc 3128
+
+
+Hi Adrian,
+
+Apologies for the delay — happy to answer your questions. We're using SAML with Azure AD for Jenkins authentication, and group-to-role mappings are managed via Jenkins CasC (Configuration as Code). The Azure AD group IDs (UUIDs) are mapped directly to roles in our Matrix Authorization configuration.
+
+---
+
+1. UNAUTHORISED ACCESS & WEAK AUTHENTICATION
+
+Without authentication:
+- Anonymous users currently have NO permissions in our setup (Anonymous row is fully unchecked). This is correctly locked down.
+
+With read-only access (Authenticated Users):
+- Authenticated users get Read-only access to Jenkins UI.
+- They can view job names and basic status but cannot trigger builds, access credentials, or modify configurations.
+
+With job-config access:
+- Roles like 'developer' and 'tech_lead' have Job Configure permissions.
+- This means they can modify pipeline definitions within their assigned jobs.
+- We mitigate this by scoping job-level permissions via Project-based Matrix Authorization where applicable.
+
+---
+
+2. REMOTE CODE EXECUTION (RCE) VIA JENKINS FEATURES
+
+PR Builds:
+- Fork PR builds are restricted — only trusted contributors can trigger builds on PRs. Untrusted forks require approval before build execution.
+
+Shared Libraries:
+- All shared libraries are pinned to our internal SCM (organisation-controlled repos only).
+- External or user-defined @Library references are not permitted.
+- Script approval is enforced for any non-sandboxed Groovy usage.
+
+Webhooks:
+- All webhook endpoints are protected with shared secrets.
+- GitHub/SCM webhook IPs are allowlisted at the network perimeter.
+- Unauthenticated build triggers are disabled.
+
+---
+
+3. CREDENTIAL THEFT FROM JENKINS
+
+Where secrets could appear and our controls:
+
+- Credentials Store: Encrypted at rest using Jenkins master key. Access to the credentials store UI is restricted to Administer role only (specific Azure AD admin groups).
+- Console Logs: Mask Passwords plugin is enabled globally to prevent accidental secret exposure in build logs.
+- Environment Variables on Agents: Secrets are injected only into the specific pipelines/agents that require them. Agents do not have broad access to all credentials.
+- Agent Workspace: Workspaces are cleaned post-build to prevent secret file persistence across builds.
+- Script Console: Access is restricted to admin-only Azure AD groups. This is the highest-risk surface and is tightly controlled.
+
+Our Azure AD group-to-role mapping (managed via CasC) ensures that:
+- Named roles (developer, developer_build_only, manager, tech_lead) have least-privilege permissions.
+- UUID-based Azure AD groups are mapped to specific permission sets without broad access.
+- The 'dig_dpops_ro' service account currently holds Administer rights — we are reviewing this to ensure it aligns with its intended read-only purpose.
+
+Please let me know if you need further details or a walkthrough of the CasC configuration.
+
+
+
+"The 'dig_dpops_ro' account is the designated Jenkins admin account, restricted to the platform admin team only."
+Best regards,
+Gaurav
+
+
